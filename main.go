@@ -38,9 +38,14 @@ var (
 		Name: "root_redirects_total",
 		Help: "The total number of root redirects.",
 	})
+	redirectCalls = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "redirect_calls_total",
+		Help: "The total number of times redirect was called.",
+	})
 )
 
 func redirect(w http.ResponseWriter, r *http.Request) {
+	redirectCalls.Inc()
 	request_url := strings.Split(r.URL.Path, "/")
 	log.Println("Request length:", len(request_url))
 	if len(request_url) > 1 {
